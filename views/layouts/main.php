@@ -20,9 +20,10 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <link href="<?php Yii::$app->request->baseUrl ?>./images/user-icon.png" type="icon">
     <?php $this->head() ?>
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini  sidebar-collapse">
 <?php $this->beginBody() ?>
 
 <div class="wrapper">

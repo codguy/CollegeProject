@@ -36,13 +36,15 @@ use yii\widgets\ActiveForm;
 					<div class="card-body">
 						<div class="m-sm-4">
 							<div class="text-center">
+							<label class="fa fa-picture-o" for="file-ip-1">
 								<?php
                                     if (! empty($model->profile_picture)) {
-                                        echo '<img src=' . $model->getImageUrl() . ' alt="Charles Hall" class="img-fluid rounded-circle" width="132" height="132" />';
+                                        echo '<img src=' . $model->getImageUrl() . ' alt="Charles Hall" class="profile_pic" width="150" height="150"  id="file-ip-1-preview"/>';
                                     } else {
-                                        echo '<img src="images/user-icon.png" class="img-fluid rounded-circle" width="132" height="132" />';
+                                        echo '<img src="'. Yii::$app->request->baseUrl.'/images/user-icon.png" class="profile_pic" width="150" height="150"  id="file-ip-1-preview"/>';
                                     }
                                 ?>
+                                </label>
 							</div>
 
 							<div class="mb-3">
@@ -65,13 +67,15 @@ use yii\widgets\ActiveForm;
                                 <?= $form->field($model, 'gender',['template' => '<div class ="Radio-btn">{input}Male</div>'])->textInput(['type'=>'radio', 'value' => 'Male']) ?>
                                 <?= $form->field($model, 'gender', ['template' => '<div class ="Radio-btn">{input}Female</div>'])->textInput(['type'=>'radio', 'value' => 'Female']) ?>
                                 </div>
-								<div class="mb-3">
-                                    <?= $form->field($model, 'profile_picture', ['template' => '{input}'])->fileInput()?>
+								<div class="mb-3"> 
+                                    <img style="display:none"  class="profile_pic" width="150" height="150"  >
+                                    <?= $form->field($model, 'profile_picture', ['template' => '{input}'])->fileInput(['onchange'=>"showPreview(event);", 'id'=>"file-ip-1", 'class'=>'form-input' ])?>
+<!--                                     <label id='upload-img'>Upload Image</label> -->
                                 </div>
 							<div class="text-center mt-3">
 
 								<div class="form-group">
-                                        <?= Html::submitButton(Yii::t('app', 'Create User'), ['class' => 'btn btn-success login-btns']) ?>
+                                        <?= Html::submitButton((Yii::$app->controller->action->id == 'create') ? Yii::t('app', 'Create User') : Yii::t('app', 'Update User'), ['class' => 'btn btn-success login-btns']) ?>
                                     </div>
 							</div>
                         <?php ActiveForm::end(); ?>
@@ -85,3 +89,12 @@ use yii\widgets\ActiveForm;
 		</div>
 	</div>
 </main>
+<script>
+function showPreview(event){
+  if(event.target.files.length > 0){
+    var src = URL.createObjectURL(event.target.files[0]);
+    var preview = document.getElementById("file-ip-1-preview");
+    preview.src = src;
+  }
+}
+</script>

@@ -1,4 +1,7 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<?php
+use app\models\search\TblUser;
+?>
+<aside class="main-sidebar sidebar-dark-primary sidebar-collapse elevation-4">
     <!-- Brand Logo -->
 <!--     <a href="index3.html" class="brand-link">
         <img src="<?=$assetDir?>/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -10,10 +13,11 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="<?=$assetDir?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            <?php $model = new TblUser(); ?>
+                <img src="<?= $model->getImageUrl() ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="#" class="d-block"><?php Yii::$app->user->identity?></a>
             </div>
         </div>
 
@@ -53,8 +57,9 @@
 //                     ['label' => 'Level1'],
                     [
                         'label' => 'Users',
+                        'icon' => 'user',
                         'items' => [
-                            ['label' => 'Add', 'url' => ['user/create'], 'iconStyle' => 'far'],
+                            ['label' => 'Add', 'url' => ['user/create'], 'iconStyle' => 'fas fa-plus'],
 //                             [
 //                                 'label' => 'Level2',
 //                                 'iconStyle' => 'far',
@@ -64,7 +69,7 @@
 //                                     ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle']
 //                                 ]
 //                             ],
-                            ['label' => 'Show', 'url' => ['user/index'], 'iconStyle' => 'far']
+                            ['label' => 'Show', 'url' => ['user/index'], 'iconStyle' => 'fas fa-table']
                         ]
                     ],
 //                     ['label' => 'Level1'],

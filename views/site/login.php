@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
+use app\models\search\TblUser;
 ?>
 <main class="d-flex w-100">
 	<div class="container d-flex flex-column">
@@ -16,7 +17,8 @@ use yii\bootstrap4\ActiveForm;
 					<div class="card-body">
 						<div class="m-sm-4">
 							<div class="text-center">
-								<img src="images/user-icon.png"
+							<?php $user = new \app\models\TblUser()?>
+								<img src="<?= $user->getImageUrl() ?>"
 									class="img-fluid rounded-circle" width="132" height="132" />
 							</div>
                             <?php $form = ActiveForm::begin([

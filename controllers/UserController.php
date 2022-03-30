@@ -9,6 +9,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use app\models\LoginForm;
+use app\models\Notification;
+
 
 /**
  * UserController implements the CRUD actions for TblUser model.
@@ -75,13 +77,28 @@ class UserController extends Controller
             if ($model->load($this->request->post())) {
                 $model->created_on = date('Y-m-d H:i:s');
                 $model->created_by_id = '1';
+                $model->state_id = TblUser::STATE_ACTIVE;
                 $model->authKey = 'test'.$obj.'.key';
                 $model->accessToken = $obj.'-token';
                 $model->profile_picture = UploadedFile::getInstance($model, 'profile_picture');
                 $model->upload();
                 if ($model->save(false)) {
+                    $title = 'New '.$model->getRole($model->roll_id);
+                    $type = Notification::TYPE_NEW_USER;
+                    $notification = new Notification();
+                    $notification->username = $model->username;
+                    $notification->title = $title;
+                    $notification->type_id = $type;
+                    $notification->user_id = $model->id;
+                    $notification->icon_name = 'user';
+                    $notification->state_id = Notification::STATE_UNREAD;
+                    $notification->model_id = get_class($model);
+                    $notification->created_on = date('Y-m-d H:i:s');
+                    $notification->created_by_id = '1';
+                    $notification->save(false); 
                     $this->redirect([
-                        'index'
+                        'view',
+                        'id' => $model->id
                     ]);
                 }
                 
@@ -155,10 +172,26 @@ class UserController extends Controller
         if ($this->request->isPost && $model->load($this->request->post())){
             $model->profile_picture = UploadedFile::getInstance($model, 'profile_picture');
             $model->upload();
-            $model->profile_picture = $model->imageName();
             
             //             echo '<pre>';var_dump($model);die;
             if($model->save(false)) {
+                $title = 'Update';
+                $type = Notification::TYPE_USER_UPDATED;
+                $users = TblUser::findAll(['roll_id' => TblUser::ROLE_ADMIN]);
+                foreach ($users as $user){
+                    $notification = new Notification();
+                    $notification->username = $model->username;
+                    $notification->title = $title;
+                    $notification->type_id = $type;
+                    $notification->user_id = $model->id;
+                    $notification->icon_name = 'user';
+                    $notification->to_user_id = $user->id;
+                    $notification->state_id = Notification::STATE_UNREAD;
+                    $notification->model_id = get_class($model);
+                    $notification->created_on = date('Y-m-d H:i:s');
+                    $notification->created_by_id = '1';
+                    $notification->save(false);
+                }
                 
                 return $this->redirect([
                     'view',
@@ -182,8 +215,21 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $title = 'Deleted';
+        $type = Notification::TYPE_USER_DELETED;
+        $notification = new Notification();
+        $notification->username = $model->username;
+        $notification->title = $title;
+        $notification->type_id = $type;
+        $notification->user_id = $model->id;
+        $notification->icon_name = 'user';
+        $notification->state_id = Notification::STATE_UNREAD;
+        $notification->model_id = get_class($model);
+        $notification->created_on = date('Y-m-d H:i:s');
+        $notification->created_by_id = '1';
+        $notification->save(false);
+        $model->delete();
         return $this->redirect(['index']);
     }
 

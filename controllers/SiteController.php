@@ -73,12 +73,13 @@ class SiteController extends Controller
     public function actionLogin()
     {
         $this->layout = 'blank';
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+//         if (!Yii::$app->user->isGuest) {
+//             return $this->goHome();
+//         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            var_dump($model);die;
             return $this->goBack();
         }
 
@@ -137,6 +138,7 @@ class SiteController extends Controller
                 $model->roll_id = \app\models\TblUser::IS_USER;
                 $model->created_on = date('Y-m-d H:i:s');
                 $model->created_by_id = '1';
+                $model->state_id = '1';
                 $model->authKey = 'test'.$obj.'.key';
                 $model->accessToken = $obj.'-token';
                 if ($model->save(false)) {

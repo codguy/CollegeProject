@@ -280,19 +280,23 @@ class TblUser extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function getImageUrl()
     {
-        return '../uploads/' . $this->profile_picture;
+        if (!empty($this->profile_picture)) {
+            return Yii::$app->request->baseUrl.'/../uploads/' . $this->profile_picture;
+        }else {
+            return Yii::$app->request->baseUrl.'/images/user-icon.png';
+        }
     }
 
     public function getImage()
     {
-        $img = '<img src=' . $this->getImageUrl() . ' height="100px">';
+        $img = '<img src=' . $this->getImageUrl() . ' height="60px" width="60px" class="profile_pic">';
         return $img;
     }
 
-    public function imageName()
-    {
-        return str_replace(" ", "_", $this->profile_picture->baseName) . '.' . $this->profile_picture->extension;
-    }
+//     public function imageName()
+//     {
+//         return str_replace(" ", "_", $this->profile_picture->baseName) . '.' . $this->profile_picture->extension;
+//     }
 
     public function upload()
     {
@@ -340,6 +344,11 @@ class TblUser extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         $list = $this->getStateOption();
         return $list[$id];
+    }
+    
+    public function getTableProfile($model){
+        $profile = $model->getImage()." ".$model->username;
+        return $profile;
     }
     
     
